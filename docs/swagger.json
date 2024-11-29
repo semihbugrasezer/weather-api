@@ -1,0 +1,122 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {},
+        "version": "",
+        "title": ""
+    },
+    "paths": {
+        "/weather": {
+            "post": {
+                "description": "Save the provided weather data to the MongoDB database. This endpoint stores the weather data for a specific city in the database for later use and retrieval.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Save weather data to MongoDB",
+                "parameters": [
+                    {
+                        "description": "Weather data",
+                        "name": "weather",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Weather"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Weather data successfully created\" // Response message when weather data is successfully saved",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input format\" // When the input data is malformed or invalid",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to save weather data\" // If there is an error while saving the data",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/weather/{city}": {
+            "get": {
+                "description": "Get weather data for a specific city from WeatherStack API. This endpoint fetches the current weather information, including temperature and humidity, for the provided city.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Get weather data by city",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "City name",
+                        "name": "city",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Weather data successfully retrieved\" // Response structure when successful",
+                        "schema": {
+                            "$ref": "#/definitions/models.Weather"
+                        }
+                    },
+                    "404": {
+                        "description": "City not found\" // When the city is not found or invalid",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" // In case of a server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Weather": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "humidity": {
+                    "type": "number"
+                },
+                "temperature": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

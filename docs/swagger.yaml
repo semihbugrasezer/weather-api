@@ -1,0 +1,87 @@
+definitions:
+  models.Weather:
+    properties:
+      city:
+        type: string
+      createdAt:
+        type: string
+      date:
+        type: string
+      humidity:
+        type: number
+      temperature:
+        type: number
+    type: object
+info:
+  contact: {semih.b.sezer@gmail.com}
+  version: "1.0"
+  title: "Weather API"
+paths:
+  /weather:
+    post:
+      consumes:
+      - application/json
+      description: Save the provided weather data to the MongoDB database. This endpoint
+        stores the weather data for a specific city in the database for later use
+        and retrieval.
+      parameters:
+      - description: Weather data
+        in: body
+        name: weather
+        required: true
+        schema:
+          $ref: '#/definitions/models.Weather'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Weather data successfully created" // Response message when
+            weather data is successfully saved
+          schema:
+            type: string
+        "400":
+          description: Invalid input format" // When the input data is malformed or
+            invalid
+          schema:
+            type: string
+        "500":
+          description: Failed to save weather data" // If there is an error while
+            saving the data
+          schema:
+            type: string
+      summary: Save weather data to MongoDB
+      tags:
+      - weather
+  /weather/{city}:
+    get:
+      consumes:
+      - application/json
+      description: Get weather data for a specific city from WeatherStack API. This
+        endpoint fetches the current weather information, including temperature and
+        humidity, for the provided city.
+      parameters:
+      - description: City name
+        in: path
+        name: city
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Weather data successfully retrieved" // Response structure
+            when successful
+          schema:
+            $ref: '#/definitions/models.Weather'
+        "404":
+          description: City not found" // When the city is not found or invalid
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error" // In case of a server error
+          schema:
+            type: string
+      summary: Get weather data by city
+      tags:
+      - weather
+swagger: "2.0"
