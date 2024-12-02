@@ -1,113 +1,107 @@
-Here is a detailed README.md file for your project:
+# 🌦️ Weather API
 
-# Weather API
-
-The Weather API is a RESTful API that provides weather data for specific cities and saves the data to a MongoDB database.
+A simple REST API for fetching and storing weather data using Go, Gorilla Mux, and MongoDB. This project demonstrates how to interact with an external API (WeatherStack), store data in MongoDB, and serve weather-related endpoints.
 
 ## Features
 
-- **Fetch Weather Data:** Retrieve weather data for a specific city from the WeatherStack API, including temperature and humidity.
-- **Save Weather Data:** Save weather data for a city in a MongoDB database for future reference.
-- **Automatic Data Expiry:** Implements a TTL index to automatically remove data older than 24 hours from the database.
-- **Rate Limiting:** Includes rate limiting to prevent excessive API usage.
+- **Get Weather by City**: Fetch current weather (temperature and humidity) for a specific city from the WeatherStack API.
+- **Save Weather Data**: Store weather data for later retrieval using MongoDB.
+- **Automatic Cleanup**: Old weather data is automatically deleted using MongoDB TTL indexing.
+- **Rate Limiting**: Prevent excessive requests with built-in rate limiting.
+- **Swagger Integration**: View detailed, interactive API documentation.
 
-## Installation
+## Technologies Used
+
+- **Go** (v1.23.3)
+- **Gorilla Mux** - A robust HTTP router and URL matcher for building RESTful APIs.
+- **MongoDB** - A NoSQL database for efficient data storage.
+- **WeatherStack API** - An external weather data provider.
+- **Swagger** - For API documentation generation.
+
+## Getting Started
+
+### Prerequisites
+
+- Install Go (version 1.23.3 or later).
+- Install MongoDB and ensure it's running locally on port `27017`.
+- Obtain a WeatherStack API key from [WeatherStack](https://weatherstack.com/).
+
+### Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/weather-api.git
-   cd weather-api
 
-	2.	Install dependencies:
+    ```bash
+    git clone https://github.com/yourusername/weather-api.git
+    cd weather-api
+    ```
 
-go mod tidy
+2. Install dependencies:
 
+    ```bash
+    go mod tidy
+    ```
 
-	3.	Create a .env file in the root directory and add the following variables:
+3. Set up environment variables:
+   Create a `.env` file in the project root with the following:
+    ```plaintext
+    MONGODB_URI=mongodb://localhost:27017/weatherdb
+    WEATHERSTACK_API_KEY=your_weatherstack_api_key
+    ```
 
-MONGODB_URI=your_mongodb_connection_string
-WEATHERSTACK_API_KEY=your_weatherstack_api_key
+4. Run the application:
 
+    ```bash
+    go run main.go
+    ```
 
-	4.	Run the API:
+   The server will be running on `http://localhost:8080`.
 
-go run main.go
+## API Endpoints
 
+### `GET /weather/{city}`
+- **Description**: Retrieves current weather data for a specified city.
+- **Path Parameter**:
+    - `city`: Name of the city (required).
+- **Response**:
+    ```json
+    {
+        "city": "London",
+        "temperature": 15.5,
+        "humidity": 80,
+        "date": "2024-01-01",
+        "createdAt": "2024-01-01T12:00:00Z"
+    }
+    ```
 
+### `POST /weather`
+- **Description**: Stores weather data in MongoDB.
+- **Request Body**:
+    ```json
+    {
+        "city": "London",
+        "temperature": 15.5,
+        "humidity": 80,
+        "date": "2024-01-01",
+        "createdAt": "2024-01-01T12:00:00Z"
+    }
+    ```
+- **Response**:
+    ```json
+    {
+        "message": "Weather data successfully created"
+    }
+    ```
 
-API Endpoints
+## Swagger Documentation
 
-1. Get Weather Data by City
+- Access the interactive Swagger documentation at:
 
-	•	URL: /weather/{city}
-	•	Method: GET
-	•	Description: Fetch weather data for a specific city from the WeatherStack API.
-	•	Parameters:
-	•	city (path): Name of the city to fetch weather data for.
-	•	Responses:
-	•	200 OK: Returns the weather data for the city.
-	•	404 Not Found: City not found.
-	•	500 Internal Server Error: Server error.
+http://localhost:8080/swagger/
 
-2. Save Weather Data
+## Contribution
 
-	•	URL: /weather
-	•	Method: POST
-	•	Description: Save weather data to the MongoDB database.
-	•	Request Body:
+Contributions are welcome! Fork this repository, make your changes, and open a pull request. Whether it's fixing bugs, improving documentation, or adding new features, every contribution counts.
 
-{
-  "city": "City Name",
-  "temperature": 25.5,
-  "humidity": 60,
-  "date": "2024-01-01",
-  "createdAt": "2024-01-01T12:00:00Z"
-}
+## License
 
-
-	•	Responses:
-	•	201 Created: Weather data successfully saved.
-	•	400 Bad Request: Invalid input format.
-	•	500 Internal Server Error: Failed to save weather data.
-
-Project Structure
-
-	•	config/: Contains the MongoDB connection logic.
-	•	models/: Includes data models and functions for interacting with MongoDB and WeatherStack API.
-	•	routes/: Defines HTTP handlers for the API endpoints.
-	•	main.go: The entry point of the application.
-	•	docs/: Swagger documentation files.
-
-Swagger Documentation
-
-Swagger UI is available at /swagger/. It provides detailed API documentation and allows testing the endpoints interactively.
-
-Example Usage
-
-Fetch Weather Data
-
-curl -X GET http://localhost:8080/weather/London
-
-Save Weather Data
-
-curl -X POST http://localhost:8080/weather \
--H "Content-Type: application/json" \
--d '{
-  "city": "London",
-  "temperature": 25.5,
-  "humidity": 60,
-  "date": "2024-01-01",
-  "createdAt": "2024-01-01T12:00:00Z"
-}'
-
-Dependencies
-
-	•	Go Modules: Dependency management.
-	•	gorilla/mux: HTTP router.
-	•	swaggo/swag: Swagger documentation.
-	•	WeatherStack API: For fetching weather data.
-	•	MongoDB: Database for storing weather data.
-
-License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is open-source and available under the [MIT License](LICENSE).
